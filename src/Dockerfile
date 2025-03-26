@@ -1,7 +1,10 @@
-FROM node:18.16.0
+FROM cgr.dev/chainguard/node:latest
+ENV NODE_ENV=production
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY --chown=node:node package*.json ./
+RUN npm install --omit-dev
 COPY . .
 EXPOSE 8080
-CMD ["node", "server.js"]
+USER fspelling
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 CMD [ "executable" ]
+CMD ["server.js"]
